@@ -11,18 +11,15 @@ using System.Timers;
 
 namespace evolution
 {
-    
     public partial class Form1 : Form
     {
         public Simulation sim;
-        
+
         public Form1()
         {
             InitializeComponent();
             timer1.Stop();
         }
-
-        
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -41,7 +38,6 @@ namespace evolution
             this.label2.Text = peaceful.ToString();
             this.label10.Text = day.ToString();
         }
-
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -65,7 +61,8 @@ namespace evolution
         }
         private void button_start_Click(object sender, EventArgs e)
         {
-            if (sim == null) {
+            if (sim == null)
+            {
                 timer1.Stop();
                 newSimFromInput();
                 updSimInfo();
@@ -78,15 +75,13 @@ namespace evolution
         {
             timer1.Stop();
         }
-
-       
     }
 
     public class Simulation
     {
         Random rnd = new Random();
         Match[] matchArr;
-        List <Animal> animalArr = new List<Animal>();
+        List<Animal> animalArr = new List<Animal>();
 
         public int day = 0;
 
@@ -95,17 +90,15 @@ namespace evolution
             this.matchArr = new Match[food_amount];
 
             //first fill of animal arr
-            for (int i = 0; i < peaceful_amount+angry_amount; i++)
+            for (int i = 0; i < peaceful_amount + angry_amount; i++)
             {
-                animalArr.Add(new Animal(i<angry_amount?true:false));
+                animalArr.Add(new Animal(i < angry_amount ? true : false));
             }
-
         }
 
         public void playDay()
         {
             List<Animal> newDayAnimalArr = new List<Animal>();
-            
 
             //refresh match arr
             for (int i = 0; i < matchArr.Length; i++)
@@ -125,9 +118,7 @@ namespace evolution
                         animalArr.RemoveAt(aNum);
 
                     }
-                    
                 }
-
             }
 
             //get results
@@ -139,7 +130,6 @@ namespace evolution
 
             //apply results
             this.animalArr = newDayAnimalArr;
-
             day++;
         }
 
@@ -152,8 +142,6 @@ namespace evolution
             }
             return amount;
         }
-
-        
     }
 
     public class Animal
@@ -205,8 +193,8 @@ namespace evolution
                 }
                 else if (aMod0 == true & aMod1 == true)
                 {
-                   res.Add(matchAnimals[rnd.Next(2)]);//fight winner
-               
+                    res.Add(matchAnimals[rnd.Next(2)]);//fight winner
+
                 }
                 else if (aMod0 == false & aMod1 == false)
                 {
@@ -215,14 +203,8 @@ namespace evolution
                     res.Add(matchAnimals[1]);//animal2
                     if (rnd.Next(2) > 0) res.Add(matchAnimals[1]);//children2
                 }
-                
-
-
             };
-
-
             return res;
         }
-
     }
 }
