@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace evolution
 {
@@ -20,6 +21,7 @@ namespace evolution
     /// </summary>
     public partial class MainWindow : Window
     {
+        public DispatcherTimer timer = new DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
