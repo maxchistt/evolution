@@ -25,76 +25,6 @@ namespace evolution
             InitializeComponent();
         }
     }
-}
-
-/*
-namespace evolution_OLD
-{
-    public partial class Form1 : Form
-    {
-        public Simulation sim;
-
-        public Form1()
-        {
-            InitializeComponent();
-            timer1.Stop();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            sim.playDay();
-            updSimInfo();
-            //Refresh();
-        }
-
-        void updSimInfo()
-        {
-            int angry = sim.getInfo(true);
-            int peaceful = sim.getInfo(false);
-            int day = sim.day;
-
-            this.label1.Text = angry.ToString();
-            this.label2.Text = peaceful.ToString();
-            this.label10.Text = day.ToString();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        void newSimFromInput()
-        {
-            int ang, pea, fam;
-            ang = Convert.ToInt32(textBox1.Text);
-            pea = Convert.ToInt32(textBox2.Text);
-            fam = Convert.ToInt32(textBox3.Text);
-            sim = new Simulation(ang, pea, fam);
-        }
-
-        private void button_new_sim_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-            newSimFromInput();
-            updSimInfo();
-        }
-        private void button_start_Click(object sender, EventArgs e)
-        {
-            if (sim == null)
-            {
-                timer1.Stop();
-                newSimFromInput();
-                updSimInfo();
-            }
-
-            timer1.Start();
-        }
-
-        private void button_pause_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-        }
-    }
 
     public class Simulation
     {
@@ -226,5 +156,77 @@ namespace evolution_OLD
             return res;
         }
     }
+}
+
+/*
+namespace evolution_OLD
+{
+    public partial class Form1 : Form
+    {
+        public Simulation sim;
+
+        public Form1()
+        {
+            InitializeComponent();
+            timer1.Stop();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            sim.playDay();
+            updSimInfo();
+            //Refresh();
+        }
+
+        void updSimInfo()
+        {
+            int angry = sim.getInfo(true);
+            int peaceful = sim.getInfo(false);
+            int day = sim.day;
+
+            this.label1.Text = angry.ToString();
+            this.label2.Text = peaceful.ToString();
+            this.label10.Text = day.ToString();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        void newSimFromInput()
+        {
+            int ang, pea, fam;
+            ang = Convert.ToInt32(textBox1.Text);
+            pea = Convert.ToInt32(textBox2.Text);
+            fam = Convert.ToInt32(textBox3.Text);
+            sim = new Simulation(ang, pea, fam);
+        }
+
+        private void button_new_sim_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+            newSimFromInput();
+            updSimInfo();
+        }
+        private void button_start_Click(object sender, EventArgs e)
+        {
+            if (sim == null)
+            {
+                timer1.Stop();
+                newSimFromInput();
+                updSimInfo();
+            }
+
+            timer1.Start();
+        }
+
+        private void button_pause_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+        }
+    }
+
+
 }
 */
