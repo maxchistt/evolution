@@ -56,6 +56,25 @@ namespace evolution
             pea = Convert.ToInt32(input_Peaceful.Text);
             fam = Convert.ToInt32(input_Food.Text);
             simulation.setNewSim(ang, pea, fam);
+            simData_updateDynamic();
+        }
+
+        public void simData_PushAnimals()
+        {
+            int ang, pea;
+            ang = Convert.ToInt32(input_Angry.Text);
+            pea = Convert.ToInt32(input_Peaceful.Text);
+            simulation.pushAnimals(ang, pea);
+            //добавить кнопку пушер
+        }
+
+        public void simData_updateDynamic()
+        {
+            int fam = Convert.ToInt32(input_Food.Text);
+            double foodInMatch, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent;
+            //добавить инпуты, и обработку данных
+
+            //simulation.updateDinamicData(fam, foodInMatch, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent);
         }
 
         public void sim_New()
@@ -81,6 +100,8 @@ namespace evolution
         {
             simulation.Pause();
         }
+
+
 
         private void btn_NewSim_Click(object sender, RoutedEventArgs e)
         {

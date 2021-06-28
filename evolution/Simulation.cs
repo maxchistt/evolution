@@ -19,6 +19,22 @@ namespace evolution
             addTimerHandler(playDay);
         }
 
+        public bool updateDinamicData(int foodMatchesAmount, double foodInMatch, double angryAngryFightHarmPercent, double angryPecefulAngrysPartPercent)
+        {
+            if (foodMatchesAmount <= 0 || foodInMatch <= 0 || foodInMatch > 100 || angryAngryFightHarmPercent < 0 || angryAngryFightHarmPercent > 100 || angryPecefulAngrysPartPercent < 0 || angryPecefulAngrysPartPercent > 100)
+            {
+                return false;
+            }
+
+            matchField.updateDinamicData(foodMatchesAmount, foodInMatch, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent);
+            return true;
+        }
+
+        public void pushAnimals(int angry, int peaceful)
+        {
+            population.pushAnimals(angry, peaceful);
+        }
+
         private void playDay()
         {
             //refresh match arr
@@ -95,6 +111,18 @@ namespace evolution
             }
             //shuffle animals
             shuffle();
+        }
+
+        public void pushAnimals(int angry_amount, int peaceful_amount)
+        {
+            for (int i = 0; i < peaceful_amount; i++)
+            {
+                animalArr.Add(new Animal(false));
+            }
+            for (int i = 0; i < angry_amount; i++)
+            {
+                animalArr.Add(new Animal(true));
+            }
         }
 
         public void lifecicle()
@@ -200,11 +228,41 @@ namespace evolution
 
     public class MatchField
     {
+        public double food_in_match = 2;
+        public int food_matches_amount = 50;
+        public double angry_angry_FightHarmPercent = 100;
+        public double angry_peceful_AngrysPartPercent = 75;
+
         public Match[] matchArr;
 
         public MatchField(int food_amount)
         {
-            matchArr = new Match[food_amount];
+            food_matches_amount = food_amount;
+            matchArr = new Match[food_matches_amount];
+        }
+
+        public void updateDinamicData(int foodMatchesAmount, double foodInMatch, double angryAngryFightHarmPercent, double angryPecefulAngrysPartPercent)
+        {
+
+            food_in_match = foodInMatch;
+            angry_angry_FightHarmPercent = angryAngryFightHarmPercent;
+            angry_peceful_AngrysPartPercent = angryPecefulAngrysPartPercent;
+
+            if (food_matches_amount != foodMatchesAmount)
+            {
+                food_matches_amount = foodMatchesAmount;
+                matchArr = new Match[food_matches_amount];
+                refresh();
+            }
+            else
+            {
+                for (int i = 0; i < matchArr.Length; i++)
+                {
+                    matchArr[i].updateDinamicData(food_in_match, angry_angry_FightHarmPercent, angry_peceful_AngrysPartPercent);
+                }
+            }
+
+
         }
 
         public void refresh()
@@ -213,6 +271,7 @@ namespace evolution
             for (int i = 0; i < matchArr.Length; i++)
             {
                 matchArr[i] = new Match();
+                matchArr[i].updateDinamicData(food_in_match, angry_angry_FightHarmPercent, angry_peceful_AngrysPartPercent);
             }
         }
 
@@ -232,12 +291,19 @@ namespace evolution
         private List<Animal> animalArrRef;
 
         public double food_in_match = 2;
-        public double angry_angry_FightWinersPartPercent = 0;
+        public double angry_angry_FightHarmPercent = 100;
         public double angry_peceful_AngrysPartPercent = 75;
 
         public Match()
         {
             matchAnimalIndexes = new List<int>();
+        }
+
+        public void updateDinamicData(double foodInMatch, double angryAngryFightHarmPercent, double angryPecefulAngrysPartPercent)
+        {
+            food_in_match = foodInMatch;
+            angry_angry_FightHarmPercent = angryAngryFightHarmPercent;
+            angry_peceful_AngrysPartPercent = angryPecefulAngrysPartPercent;
         }
 
         public void setAnimalArrRef(ref List<Animal> animArrRef)
@@ -275,7 +341,7 @@ namespace evolution
                 }
                 else if (aMod0 == true)
                 {
-                    animalArrRef[matchAnimalIndexes[0]].food += food_in_match / 100 * angry_angry_FightWinersPartPercent;
+                    animalArrRef[matchAnimalIndexes[0]].food += food_in_match - (animalArrRef[matchAnimalIndexes[0]].food_to_feed / 100 * angry_angry_FightHarmPercent);
                 }
                 else if (aMod0 == false)
                 {
