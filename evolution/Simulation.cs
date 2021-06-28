@@ -167,7 +167,7 @@ namespace evolution
     {
         public Timer()
         {
-            Interval = new TimeSpan(0, 0, 1);
+            Interval = new TimeSpan(0, 0, 0, 0, 500);
             Stop();
         }
 

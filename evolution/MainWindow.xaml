@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:evolution"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Icon="icon.ico"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -74,21 +75,23 @@
         <GroupBox Header="Simulation dynamic" Margin="10,10,10,10" Grid.Column="1" Grid.Row="4" FontFamily="LCD">
             <Grid Height="158" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="52*"/>
-                    <RowDefinition Height="51*"/>
-                    <RowDefinition Height="55*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="114*"/>
-                    <ColumnDefinition Width="205*"/>
+                    <ColumnDefinition Width="169*"/>
+                    <ColumnDefinition Width="464*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="Day" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="90" Height="40" FontSize="20"/>
-                <Label Grid.Column="0" Grid.Row="1" Content="Angry" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="90" Height="40" FontSize="20" FontWeight="Bold"/>
-                <Label Grid.Column="0" Grid.Row="2" Content="Peaceful" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="90" Height="40" FontSize="20" FontWeight="Bold"/>
+                <Label Content="Day" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="90" Height="40" FontSize="20"/>
+                <Label Grid.Row="1" Content="Angry" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="90" Height="40" FontSize="20" FontWeight="Bold"/>
+                <Label Grid.Row="2" Content="Peaceful" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="90" Height="40" FontSize="20" FontWeight="Bold"/>
 
-                <Label x:Name="label_Day" Grid.Column="1" Grid.Row="0" Content="0" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="100" Height="40" FontSize="20"/>
-                <Label x:Name="label_Angry" Grid.Column="1" Grid.Row="1" Content="0" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="100" Height="40" FontSize="20" FontWeight="Bold"/>
-                <Label x:Name="label_Peaceful" Grid.Column="1" Grid.Row="2" Content="0" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="100" Height="40" FontSize="20" FontWeight="Bold"/>
+                <Label x:Name="label_Day" Content="0" HorizontalAlignment="Left" Margin="100,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="70" Height="40" FontSize="20" Grid.ColumnSpan="2"/>
+                <Label x:Name="label_Angry" Grid.Row="1" Content="0" HorizontalAlignment="Left" Margin="100,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="70" Height="40" FontSize="20" FontWeight="Bold" Grid.ColumnSpan="2"/>
+                <Label x:Name="label_Peaceful" Grid.Row="2"  Content="0" HorizontalAlignment="Left" Margin="100,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" Width="70" Height="40" FontSize="20" FontWeight="Bold" Grid.ColumnSpan="2"/>
+
+                <lvc:CartesianChart x:Name="chart" Grid.Column="1" Margin="2,10,2,10" Grid.RowSpan="3"/>
             </Grid>
         </GroupBox>
     </Grid>

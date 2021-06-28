@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace evolution
 {
@@ -22,19 +24,38 @@ namespace evolution
     public partial class MainWindow : Window
     {
         private Simulation simulation;
+        private SeriesCollection series;
 
         public MainWindow()
         {
             InitializeComponent();
             simulation = new Simulation();
             simulation.addTimerHandler(simData_displayToOutput);
+
+            series = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Values = new ChartValues<int>()
+                },
+                new LineSeries
+                {
+                    Values = new ChartValues<int>()
+                }
+            };
+
+            chart.Series = series;
         }
+
 
         private void simData_displayToOutput()
         {
             int angry = simulation.getAmountEntities(true);
             int peaceful = simulation.getAmountEntities(false);
             int day = simulation.getDay();
+
+            series[0].Values.Add(peaceful);
+            series[1].Values.Add(angry);
 
             label_Angry.Content = angry.ToString();
             label_Peaceful.Content = peaceful.ToString();
@@ -48,6 +69,8 @@ namespace evolution
             pea = Convert.ToInt32(input_Peaceful.Text);
             fam = Convert.ToInt32(input_Food.Text);
             simulation.setNewSim(ang, pea, fam);
+            series[0].Values.Clear();
+            series[1].Values.Clear();
         }
 
         public void sim_New()
