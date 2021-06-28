@@ -51,12 +51,11 @@ namespace evolution
 
         private void simData_setNewFromInput()
         {
-            int ang, pea, fam;
+            int ang, pea, foodAmount;
             ang = Convert.ToInt32(input_Angry.Text);
             pea = Convert.ToInt32(input_Peaceful.Text);
-            fam = Convert.ToInt32(input_Food.Text);
-            simulation.setNewSim(ang, pea, fam);
-            simData_updateDynamic();
+            foodAmount = Convert.ToInt32(input_Food.Text);
+            simulation.setNewSim(ang, pea, foodAmount);
         }
 
         public void simData_PushAnimals()
@@ -65,16 +64,17 @@ namespace evolution
             ang = Convert.ToInt32(input_Angry.Text);
             pea = Convert.ToInt32(input_Peaceful.Text);
             simulation.pushAnimals(ang, pea);
-            //добавить кнопку пушер
         }
 
         public void simData_updateDynamic()
         {
-            int fam = Convert.ToInt32(input_Food.Text);
-            double foodInMatch, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent;
-            //добавить инпуты, и обработку данных
+            int foodAmount = Convert.ToInt32(input_Food.Text);
+            double feedInMatchFood, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent;
+            feedInMatchFood = Convert.ToDouble(input_Feed.Text);
+            angryAngryFightHarmPercent = Convert.ToDouble(input_Harm.Text);
+            angryPecefulAngrysPartPercent = Convert.ToDouble(input_Part.Text);
 
-            //simulation.updateDinamicData(fam, foodInMatch, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent);
+            simulation.updateDinamicData(foodAmount, feedInMatchFood, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent);
         }
 
         public void sim_New()
@@ -83,6 +83,7 @@ namespace evolution
             graph_Peaceful.Values.Clear();
             graph_Angry.Values.Clear();
             simData_setNewFromInput();
+            simData_updateDynamic();
             simData_displayToOutput();
         }
 
@@ -118,5 +119,14 @@ namespace evolution
             sim_Pause();
         }
 
+        private void btn_PushAnimals_Click(object sender, RoutedEventArgs e)
+        {
+            simData_PushAnimals();
+        }
+
+        private void btn_Update_Click(object sender, RoutedEventArgs e)
+        {
+            simData_updateDynamic();
+        }
     }
 }

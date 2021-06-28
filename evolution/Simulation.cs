@@ -17,11 +17,13 @@ namespace evolution
             day = 0;
             timer = new Timer();
             addTimerHandler(playDay);
+            matchField = new MatchField(0);
+            population = new Population(0, 0);
         }
 
         public bool updateDinamicData(int foodMatchesAmount, double foodInMatch, double angryAngryFightHarmPercent, double angryPecefulAngrysPartPercent)
         {
-            if (foodMatchesAmount <= 0 || foodInMatch <= 0 || foodInMatch > 100 || angryAngryFightHarmPercent < 0 || angryAngryFightHarmPercent > 100 || angryPecefulAngrysPartPercent < 0 || angryPecefulAngrysPartPercent > 100)
+            if (!(matchField is MatchField) || foodMatchesAmount <= 0 || foodInMatch <= 0 || foodInMatch > 100 || angryAngryFightHarmPercent < 0 || angryAngryFightHarmPercent > 100 || angryPecefulAngrysPartPercent < 0 || angryPecefulAngrysPartPercent > 100)
             {
                 return false;
             }
@@ -32,7 +34,10 @@ namespace evolution
 
         public void pushAnimals(int angry, int peaceful)
         {
-            population.pushAnimals(angry, peaceful);
+            if (population is Population)
+            {
+                population.pushAnimals(angry, peaceful);
+            }
         }
 
         private void playDay()
@@ -123,6 +128,7 @@ namespace evolution
             {
                 animalArr.Add(new Animal(true));
             }
+            shuffle();
         }
 
         public void lifecicle()
@@ -239,6 +245,7 @@ namespace evolution
         {
             food_matches_amount = food_amount;
             matchArr = new Match[food_matches_amount];
+            refresh();
         }
 
         public void updateDinamicData(int foodMatchesAmount, double foodInMatch, double angryAngryFightHarmPercent, double angryPecefulAngrysPartPercent)
