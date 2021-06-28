@@ -164,7 +164,9 @@ namespace evolution
     {
         private Random rnd;
         public bool angryMod;
-        public int food;
+        public double food;
+
+        public double food_to_feed = 2;
 
         public Animal(bool Angry)
         {
@@ -176,28 +178,30 @@ namespace evolution
         public List<Animal> returnAfterDay()
         {
             List<Animal> res = new List<Animal>();
-            switch (food)
+
+            if (food < (food_to_feed / 4))
             {
-                case 0:
-                    break;
-                case 1:
-                    if (rnd.Next(2) > 0) res.Add(this);
-                    break;
-                case 2:
-                    res.Add(this);
-                    break;
-                case 3:
-                    res.Add(this);
-                    if (rnd.Next(2) > 0) res.Add(new Animal(angryMod));
-                    break;
-                case 4:
-                    res.Add(this);
-                    res.Add(new Animal(angryMod));
-                    break;
-                default:
-                    Console.WriteLine("Default case");
-                    break;
+
             }
+            else if (food < (food_to_feed / 2))
+            {
+                if (rnd.Next(2) > 0) res.Add(this);
+            }
+            else if (food < food_to_feed / 4 * 3)
+            {
+                res.Add(this);
+            }
+            else if (food < food_to_feed)
+            {
+                res.Add(this);
+                if (rnd.Next(2) > 0) res.Add(new Animal(angryMod));
+            }
+            else
+            {
+                res.Add(this);
+                res.Add(new Animal(angryMod));
+            }
+
             food = 0;
             return res;
         }
@@ -234,13 +238,15 @@ namespace evolution
 
     public class Match
     {
-        private List<int> matchAnimalIndexes;
+        private List<int> matchAnimalIndexes; /// поменять
         private List<Animal> animalArrRef;
-        public int food;
+
+        public double food_in_match = 2;
+        public double angry_angry_FightWinersPartPercent = 0;
+        public double angry_peceful_AngrysPartPercent = 75;
 
         public Match()
         {
-            food = 4;
             matchAnimalIndexes = new List<int>();
         }
 
@@ -263,7 +269,7 @@ namespace evolution
         {
             if (getCount() == 1)
             {
-                animalArrRef[matchAnimalIndexes[0]].food += food;
+                animalArrRef[matchAnimalIndexes[0]].food += food_in_match;
             }
             else if (getCount() > 1)
             {
@@ -274,18 +280,17 @@ namespace evolution
                 {
                     int winnerNum = (aMod0) ? 0 : 1;
                     int looserNum = (winnerNum == 1) ? 0 : 1;
-                    animalArrRef[matchAnimalIndexes[winnerNum]].food += (food * 3) / 4;
-                    animalArrRef[matchAnimalIndexes[looserNum]].food += food / 4;
+                    animalArrRef[matchAnimalIndexes[winnerNum]].food += food_in_match * angry_peceful_AngrysPartPercent / 100;
+                    animalArrRef[matchAnimalIndexes[looserNum]].food += food_in_match * (100 - angry_peceful_AngrysPartPercent) / 100;
                 }
                 else if (aMod0 == true)
                 {
-                    //animalArrRef[matchAnimalIndexes[0]].food += food / 4;
-                    //animalArrRef[matchAnimalIndexes[1]].food += food / 4;
+                    animalArrRef[matchAnimalIndexes[0]].food += food_in_match / 100 * angry_angry_FightWinersPartPercent;
                 }
                 else if (aMod0 == false)
                 {
-                    animalArrRef[matchAnimalIndexes[0]].food += food / 2;
-                    animalArrRef[matchAnimalIndexes[1]].food += food / 2;
+                    animalArrRef[matchAnimalIndexes[0]].food += food_in_match / 2;
+                    animalArrRef[matchAnimalIndexes[1]].food += food_in_match / 2;
                 }
             };
         }
