@@ -179,33 +179,18 @@ namespace evolution
         {
             List<Animal> res = new List<Animal>();
 
-            double step0 = 0;
             double step1 = food_to_feed / 2;
             double step2 = food_to_feed;
 
-            if (food < step0)
-            {
+            //шанс выживания
+            double probability1 = food / step1 * 100;
+            bool chanse1 = rnd.Next(100) < probability1;
+            if (chanse1) res.Add(this);
 
-            }
-            else if (food < step1)
-            {
-                double probability = food / step1 * 100;
-                bool chanse = rnd.Next(100) < probability;
-                if (chanse) res.Add(this);
-            }
-            else if (food < step2)
-            {
-                res.Add(this);
-
-                double probability = (food - step1) / (step2 - step1) * 100;
-                bool chanse = rnd.Next(100) < probability;
-                if (chanse) res.Add(new Animal(angryMod));
-            }
-            else
-            {
-                res.Add(this);
-                res.Add(new Animal(angryMod));
-            }
+            //шанс размножения
+            double probability2 = (food - step1) / (step2 - step1) * 100;
+            bool chanse2 = rnd.Next(100) < probability2;
+            if (chanse2) res.Add(new Animal(angryMod));
 
             food = 0;
             return res;
