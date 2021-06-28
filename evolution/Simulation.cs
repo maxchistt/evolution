@@ -95,9 +95,13 @@ namespace evolution
             matchArr = new Match[food_amount];
             animalArr = new List<Animal>();
             //first fill of animal arr
-            for (int i = 0; i < peaceful_amount + angry_amount; i++)
+            for (int i = 0; i < peaceful_amount; i++)
             {
-                animalArr.Add(new Animal(i < angry_amount ? true : false));
+                animalArr.Add(new Animal(false));
+            }
+            for (int i = 0; i < angry_amount; i++)
+            {
+                animalArr.Add(new Animal(true));
             }
         }
 
