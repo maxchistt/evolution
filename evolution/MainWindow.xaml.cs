@@ -19,26 +19,112 @@ namespace evolution
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
     public partial class MainWindow : Window
     {
-        public DispatcherTimer timer = new DispatcherTimer();
+        public Timer timer;
+        public Simulation sim;
+
         public MainWindow()
         {
             InitializeComponent();
+            timer = new Timer(timer_Tick);
+        }
+
+        public void simData_displayToOutput()
+        {
+            int angry = sim.getInfo(true);
+            int peaceful = sim.getInfo(false);
+            int day = sim.day;
+
+            label_Angry.Content = angry.ToString();
+            label_Peaceful.Content = peaceful.ToString();
+            label_Day.Content = day.ToString();
+        }
+
+        public void simData_setNewFromInput()
+        {
+            int ang, pea, fam;
+            ang = Convert.ToInt32(input_Angry.Text);
+            pea = Convert.ToInt32(input_Peaceful.Text);
+            fam = Convert.ToInt32(input_Food.Text);
+            sim = new Simulation(ang, pea, fam);
+        }
+
+        public void sim_PlayDay()
+        {
+            sim.playDay();
+            simData_displayToOutput();
+        }
+
+        public void sim_New()
+        {
+            timer.Stop();
+            simData_setNewFromInput();
+            simData_displayToOutput();
+        }
+
+        public void sim_Start()
+        {
+            if (sim == null)
+            {
+                timer.Stop();
+                simData_setNewFromInput();
+                simData_displayToOutput();
+            }
+            timer.Start();
+        }
+
+        public void sim_Pause()
+        {
+            timer.Stop();
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            sim_PlayDay();
+        }
+
+        private void btn_NewSim_Click(object sender, RoutedEventArgs e)
+        {
+            sim_New();
+        }
+
+        private void btn_Start_Click(object sender, RoutedEventArgs e)
+        {
+            sim_Start();
+        }
+
+        private void btn_Pause_Click(object sender, RoutedEventArgs e)
+        {
+            sim_Pause();
+        }
+
+    }
+
+    public class Timer : DispatcherTimer
+    {
+        public Timer(EventHandler handler)
+        {
+            Tick += new EventHandler(handler);
+            Interval = new TimeSpan(0, 0, 1);
+            Stop();
         }
     }
 
     public class Simulation
     {
-        Random rnd = new Random();
+        Random rnd;
         Match[] matchArr;
-        List<Animal> animalArr = new List<Animal>();
+        List<Animal> animalArr;
 
         public int day = 0;
 
         public Simulation(int angry_amount, int peaceful_amount, int food_amount)
         {
-            this.matchArr = new Match[food_amount];
+            rnd = new Random();
+            matchArr = new Match[food_amount];
+            animalArr = new List<Animal>();
 
             //first fill of animal arr
             for (int i = 0; i < peaceful_amount + angry_amount; i++)
@@ -159,76 +245,3 @@ namespace evolution
         }
     }
 }
-
-/*
-namespace evolution_OLD
-{
-    public partial class Form1 : Form
-    {
-        public Simulation sim;
-
-        public Form1()
-        {
-            InitializeComponent();
-            timer1.Stop();
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            sim.playDay();
-            updSimInfo();
-            //Refresh();
-        }
-
-        void updSimInfo()
-        {
-            int angry = sim.getInfo(true);
-            int peaceful = sim.getInfo(false);
-            int day = sim.day;
-
-            this.label1.Text = angry.ToString();
-            this.label2.Text = peaceful.ToString();
-            this.label10.Text = day.ToString();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        void newSimFromInput()
-        {
-            int ang, pea, fam;
-            ang = Convert.ToInt32(textBox1.Text);
-            pea = Convert.ToInt32(textBox2.Text);
-            fam = Convert.ToInt32(textBox3.Text);
-            sim = new Simulation(ang, pea, fam);
-        }
-
-        private void button_new_sim_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-            newSimFromInput();
-            updSimInfo();
-        }
-        private void button_start_Click(object sender, EventArgs e)
-        {
-            if (sim == null)
-            {
-                timer1.Stop();
-                newSimFromInput();
-                updSimInfo();
-            }
-
-            timer1.Start();
-        }
-
-        private void button_pause_Click(object sender, EventArgs e)
-        {
-            timer1.Stop();
-        }
-    }
-
-
-}
-*/
