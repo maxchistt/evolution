@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:evolution"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="600" Height="600" MinWidth="900" Width="900">
+        Icon="icon.ico"
+        Title="Evolution" MinHeight="600" Height="600" MinWidth="900" Width="900">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
