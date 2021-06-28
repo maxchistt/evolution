@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="background.jpg" />
     <Resource Include="icon.ico" />
   </ItemGroup>
