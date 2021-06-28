@@ -31,30 +31,49 @@ namespace evolution
                 matchArr[i] = new Match();
             }
 
-            //fill matches
-            for (int j = 0; j < 2; j++)
+            //shuffle animal arr
+            List<Animal> data = new List<Animal>();
+            foreach (Animal s in animalArr)
             {
-                for (int i = 0; i < matchArr.Length; i++)
+                int j = rnd.Next(data.Count + 1);
+                if (j == data.Count)
                 {
-                    if (animalArr.Count > 0)
-                    {
-                        int aNum = rnd.Next(animalArr.Count);
-                        matchArr[i].add(animalArr[aNum]);
-                        animalArr.RemoveAt(aNum);
+                    data.Add(s);
+                }
+                else
+                {
+                    data.Add(data[j]);
+                    data[j] = s;
+                }
+            }
 
+            //fill matches
+            for (int i = 0; i < animalArr.Count; i++)
+            {
+                List<int> numArr = new List<int>();
+                for (int ind = 0; ind < matchArr.Length; ind++)
+                {
+                    if (matchArr[ind].getCount() < 2)
+                    {
+                        numArr.Add(ind);
                     }
+                }
+                if (numArr.Count>0)
+                {
+                    int mNum = numArr[rnd.Next(numArr.Count)];
+                    matchArr[mNum].add(animalArr[i]);
                 }
             }
 
             //get results
             for (int i = 0; i < matchArr.Length; i++)
             {
-                List<Animal> addList = matchArr[i].getResult();
+                List<Animal> addList = matchArr[i].fightAndGetResult();
                 newDayAnimalArr.AddRange(addList);
             }
 
             //apply results
-            this.animalArr = newDayAnimalArr;
+            animalArr = newDayAnimalArr;
             day++;
         }
 
@@ -106,23 +125,32 @@ namespace evolution
         public bool angryMod;
         public Animal(bool Angry)
         {
-            this.angryMod = Angry;
+            angryMod = Angry;
         }
     }
 
     public class Match
     {
-        List<Animal> matchAnimals = new List<Animal>();
-        Random rnd = new Random();
+        private List<Animal> matchAnimals;
+        private Random rnd;
 
-        public Match() { }
+        public Match()
+        {
+            matchAnimals = new List<Animal>();
+            rnd = new Random();
+        }
 
         public void add(Animal animal)
         {
             matchAnimals.Add(animal);
         }
 
-        public List<Animal> getResult()
+        public int getCount()
+        {
+            return matchAnimals.Count;
+        }
+
+        public List<Animal> fightAndGetResult()
         {
             List<Animal> res = new List<Animal>();
 
@@ -143,20 +171,20 @@ namespace evolution
 
                     if (rnd.Next(2) > 0) res.Add(matchAnimals[loserNum]);//loser
                     res.Add(matchAnimals[winnerNum]);//winner 
-                    if (rnd.Next(2) > 0) res.Add(matchAnimals[winnerNum]);//winner children
+                    if (rnd.Next(2) > 0) res.Add(new Animal(matchAnimals[winnerNum].angryMod));//winner children
 
                 }
-                else if (aMod0 == true & aMod1 == true)
+                else if (aMod0 == true)
                 {
                     res.Add(matchAnimals[rnd.Next(2)]);//fight winner
 
                 }
-                else if (aMod0 == false & aMod1 == false)
+                else if (aMod0 == false)
                 {
                     res.Add(matchAnimals[0]);//animal1
-                    if (rnd.Next(2) > 0) res.Add(matchAnimals[0]);//children1
+                    if (rnd.Next(2) > 0) res.Add(new Animal(matchAnimals[0].angryMod));//children1
                     res.Add(matchAnimals[1]);//animal2
-                    if (rnd.Next(2) > 0) res.Add(matchAnimals[1]);//children2
+                    if (rnd.Next(2) > 0) res.Add(new Animal(matchAnimals[1].angryMod));//children2
                 }
             };
             return res;
