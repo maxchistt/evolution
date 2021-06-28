@@ -8,8 +8,7 @@ namespace evolution
     public class Simulation
     {
         private Timer timer;
-        private Random rnd;
-        private Match[] matchArr;
+        private MatchField matchField;
         private Population population;
         private int day;
 
@@ -17,27 +16,19 @@ namespace evolution
         {
             day = 0;
             timer = new Timer();
-            rnd = new Random();
             addTimerHandler(playDay);
         }
 
         private void playDay()
         {
             //refresh match arr and set animals list ref to refreshed matches
-            for (int i = 0; i < matchArr.Length; i++)
-            {
-                matchArr[i] = new Match();
-                matchArr[i].setAnimalsRef(ref population.animalArr);
-            }
+            matchField.refreshAndSetRef(ref population);
 
             //fill animals to match arr
-            population.fillMatches(ref matchArr);
+            population.fillMatches(ref matchField.matchArr);
 
             //fight matches
-            for (int i = 0; i < matchArr.Length; i++)
-            {
-                matchArr[i].fight();
-            }
+            matchField.fightMatches();
 
             //new day, hungry animals die, feeded animals reproduse
             population.lifecicle();
@@ -49,7 +40,7 @@ namespace evolution
         public void setNewSim(int angry_amount, int peaceful_amount, int food_amount)
         {
             day = 0;
-            matchArr = new Match[food_amount];
+            matchField = new MatchField(food_amount);
             population = new Population(angry_amount, peaceful_amount);
         }
 
@@ -205,6 +196,37 @@ namespace evolution
             return res;
         }
 
+    }
+
+    public class MatchField
+    {
+        private Random rnd;
+        public Match[] matchArr;
+
+        public MatchField(int food_amount)
+        {
+            rnd = new Random();
+            matchArr = new Match[food_amount];
+        }
+
+        public void refreshAndSetRef(ref Population population)
+        {
+            //refresh match arr and set animals list ref to refreshed matches
+            for (int i = 0; i < matchArr.Length; i++)
+            {
+                matchArr[i] = new Match();
+                matchArr[i].setAnimalsRef(ref population.animalArr);
+            }
+        }
+
+        public void fightMatches()
+        {
+            //fight matches
+            for (int i = 0; i < matchArr.Length; i++)
+            {
+                matchArr[i].fight();
+            }
+        }
     }
 
     public class Match
