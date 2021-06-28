@@ -10,7 +10,7 @@ namespace evolution
         private Timer timer;
         private Random rnd;
         private Match[] matchArr;
-        private List<Animal> animalArr;
+        private Population population;
         private int day;
 
         public Simulation()
@@ -23,53 +23,15 @@ namespace evolution
 
         private void playDay()
         {
-            //refresh match arr
+            //refresh match arr and set animals list ref to refreshed matches
             for (int i = 0; i < matchArr.Length; i++)
             {
                 matchArr[i] = new Match();
-            }
-
-            //shuffle animals
-            List<Animal> shuffled = new List<Animal>();
-            foreach (Animal s in animalArr)
-            {
-                int j = rnd.Next(shuffled.Count + 1);
-                if (j == shuffled.Count)
-                {
-                    shuffled.Add(s);
-                }
-                else
-                {
-                    shuffled.Add(shuffled[j]);
-                    shuffled[j] = s;
-                }
-            }
-            animalArr = shuffled;
-
-            //set animals list ref to refreshed matches
-            for (int i = 0; i < matchArr.Length; i++)
-            {
-                matchArr[i].setAnimalsRef(ref animalArr);
+                matchArr[i].setAnimalsRef(ref population.animalArr);
             }
 
             //fill animals to match arr
-            for (int i = 0; i < animalArr.Count; i++)
-            {
-                List<int> numArr = new List<int>();
-                for (int ind = 0; ind < matchArr.Length; ind++)
-                {
-                    if (matchArr[ind].getCount() < 2)
-                    {
-                        numArr.Add(ind);
-                    }
-                }
-                if (numArr.Count > 0)
-                {
-                    int mNum = numArr[rnd.Next(numArr.Count)];
-                    matchArr[mNum].add(i);
-                    
-                }
-            }
+            population.fillMatches(ref matchArr);
 
             //fight matches
             for (int i = 0; i < matchArr.Length; i++)
@@ -77,15 +39,10 @@ namespace evolution
                 matchArr[i].fight();
             }
 
-            //fill new day aninal list
-            List<Animal> newDayAnimalArr = new List<Animal>();
-            for (int i = 0; i < animalArr.Count; i++)
-            {
-                newDayAnimalArr.AddRange(animalArr[i].returnAfterDay());
-            }
+            //new day, hungry animals die, feeded animals reproduse
+            population.lifecicle();
 
-            //apply results
-            animalArr = newDayAnimalArr;
+            //count new day
             day++;
         }
 
@@ -93,16 +50,7 @@ namespace evolution
         {
             day = 0;
             matchArr = new Match[food_amount];
-            animalArr = new List<Animal>();
-            //first fill of animal arr
-            for (int i = 0; i < peaceful_amount; i++)
-            {
-                animalArr.Add(new Animal(false));
-            }
-            for (int i = 0; i < angry_amount; i++)
-            {
-                animalArr.Add(new Animal(true));
-            }
+            population = new Population(angry_amount, peaceful_amount);
         }
 
         public void addTimerHandler(Action onNewDay)
@@ -123,7 +71,7 @@ namespace evolution
         public int getAmountEntities(bool angryType)
         {
             int amount = 0;
-            foreach (var item in animalArr)
+            foreach (var item in population.animalArr)
             {
                 if (item.angryMod == angryType) amount++;
             }
@@ -134,6 +82,85 @@ namespace evolution
         {
             return day;
         }
+    }
+
+    public class Population
+    {
+        private Random rnd;
+        public List<Animal> animalArr;
+
+        public Population(int angry_amount, int peaceful_amount)
+        {
+            rnd = new Random();
+            animalArr = new List<Animal>();
+            //first fill of animal arr
+            for (int i = 0; i < peaceful_amount; i++)
+            {
+                animalArr.Add(new Animal(false));
+            }
+            for (int i = 0; i < angry_amount; i++)
+            {
+                animalArr.Add(new Animal(true));
+            }
+            //shuffle animals
+            shuffle();
+        }
+
+        public void lifecicle()
+        {
+            //fill new day aninal list
+            List<Animal> newDayAnimalArr = new List<Animal>();
+            for (int i = 0; i < animalArr.Count; i++)
+            {
+                newDayAnimalArr.AddRange(animalArr[i].returnAfterDay());
+            }
+            animalArr = newDayAnimalArr;
+            //shuffle animals
+            shuffle();
+        }
+
+        public void fillMatches(ref Match[] matchArr)
+        {
+            //fill animals to match arr
+            for (int i = 0; i < animalArr.Count; i++)
+            {
+                List<int> numArr = new List<int>();
+                for (int ind = 0; ind < matchArr.Length; ind++)
+                {
+                    if (matchArr[ind].getCount() < 2)
+                    {
+                        numArr.Add(ind);
+                    }
+                }
+                if (numArr.Count > 0)
+                {
+                    int mNum = numArr[rnd.Next(numArr.Count)];
+                    matchArr[mNum].add(i);
+
+                }
+            }
+        }
+
+        public void shuffle()
+        {
+            //shuffle animals
+            List<Animal> shuffled = new List<Animal>();
+            foreach (Animal s in animalArr)
+            {
+                int j = rnd.Next(shuffled.Count + 1);
+                if (j == shuffled.Count)
+                {
+                    shuffled.Add(s);
+                }
+                else
+                {
+                    shuffled.Add(shuffled[j]);
+                    shuffled[j] = s;
+                }
+            }
+            animalArr = shuffled;
+        }
+
     }
 
     public class Animal
