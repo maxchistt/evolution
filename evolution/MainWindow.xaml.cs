@@ -24,7 +24,6 @@ namespace evolution
     public partial class MainWindow : Window
     {
         private Simulation simulation;
-        private SeriesCollection series;
 
         public MainWindow()
         {
@@ -32,21 +31,9 @@ namespace evolution
             simulation = new Simulation();
             simulation.addTimerHandler(simData_displayToOutput);
 
-            series = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Values = new ChartValues<int>()
-                },
-                new LineSeries
-                {
-                    Values = new ChartValues<int>()
-                }
-            };
-
-            chart.Series = series;
+            graph_Angry.Values = new ChartValues<int>();
+            graph_Peaceful.Values = new ChartValues<int>();
         }
-
 
         private void simData_displayToOutput()
         {
@@ -54,8 +41,8 @@ namespace evolution
             int peaceful = simulation.getAmountEntities(false);
             int day = simulation.getDay();
 
-            series[0].Values.Add(peaceful);
-            series[1].Values.Add(angry);
+            graph_Peaceful.Values.Add(peaceful);
+            graph_Angry.Values.Add(angry);
 
             label_Angry.Content = angry.ToString();
             label_Peaceful.Content = peaceful.ToString();
@@ -69,13 +56,13 @@ namespace evolution
             pea = Convert.ToInt32(input_Peaceful.Text);
             fam = Convert.ToInt32(input_Food.Text);
             simulation.setNewSim(ang, pea, fam);
-            series[0].Values.Clear();
-            series[1].Values.Clear();
         }
 
         public void sim_New()
         {
             simulation.Pause();
+            graph_Peaceful.Values.Clear();
+            graph_Angry.Values.Clear();
             simData_setNewFromInput();
             simData_displayToOutput();
         }
