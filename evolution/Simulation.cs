@@ -21,8 +21,8 @@ namespace evolution
 
         private void playDay()
         {
-            //refresh match arr and set animals list ref to refreshed matches
-            matchField.refreshAndSetRef(ref population);
+            //refresh match arr
+            matchField.refresh();
 
             //fill animals to match arr
             population.fillMatches(ref matchField.matchArr);
@@ -110,29 +110,35 @@ namespace evolution
             shuffle();
         }
 
-        public void fillMatches(ref Match[] matchArr)
+        public void fillMatches(ref Match[] matchArrRef)
         {
+            //set refs
+            for (int ind = 0; ind < matchArrRef.Length; ind++)
+            {
+                matchArrRef[ind].setAnimalArrRef(ref animalArr);
+            }
             //fill animals to match arr
             for (int i = 0; i < animalArr.Count; i++)
             {
+                //get index list of unfilled matches
                 List<int> numArr = new List<int>();
-                for (int ind = 0; ind < matchArr.Length; ind++)
+                for (int ind = 0; ind < matchArrRef.Length; ind++)
                 {
-                    if (matchArr[ind].getCount() < 2)
+                    if (matchArrRef[ind].getCount() < 2)
                     {
                         numArr.Add(ind);
                     }
                 }
+                //takes up unfilled match
                 if (numArr.Count > 0)
                 {
                     int mNum = numArr[rnd.Next(numArr.Count)];
-                    matchArr[mNum].add(i);
-
+                    matchArrRef[mNum].addAnimalIndex(i);
                 }
             }
         }
 
-        public void shuffle()
+        private void shuffle()
         {
             //shuffle animals
             List<Animal> shuffled = new List<Animal>();
@@ -200,22 +206,19 @@ namespace evolution
 
     public class MatchField
     {
-        private Random rnd;
         public Match[] matchArr;
 
         public MatchField(int food_amount)
         {
-            rnd = new Random();
             matchArr = new Match[food_amount];
         }
 
-        public void refreshAndSetRef(ref Population population)
+        public void refresh()
         {
             //refresh match arr and set animals list ref to refreshed matches
             for (int i = 0; i < matchArr.Length; i++)
             {
                 matchArr[i] = new Match();
-                matchArr[i].setAnimalsRef(ref population.animalArr);
             }
         }
 
@@ -239,15 +242,14 @@ namespace evolution
         {
             food = 4;
             matchAnimalIndexes = new List<int>();
-            animalArrRef = new List<Animal>();
         }
 
-        public void setAnimalsRef(ref List<Animal> arrRef)
+        public void setAnimalArrRef(ref List<Animal> animArrRef)
         {
-            animalArrRef = arrRef;
+            animalArrRef = animArrRef;
         }
 
-        public void add(int animalIndex)
+        public void addAnimalIndex(int animalIndex)
         {
             if (getCount() < 2) { matchAnimalIndexes.Add(animalIndex); }
         }
