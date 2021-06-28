@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
 namespace evolution
 {
@@ -22,67 +21,55 @@ namespace evolution
 
     public partial class MainWindow : Window
     {
-        public Timer timer;
-        public Simulation sim;
+        private Simulation simulation;
 
         public MainWindow()
         {
             InitializeComponent();
-            timer = new Timer(timer_Tick);
+            simulation = new Simulation();
+            simulation.addTimerHandler(simData_displayToOutput);
         }
 
-        public void simData_displayToOutput()
+        private void simData_displayToOutput()
         {
-            int angry = sim.getInfo(true);
-            int peaceful = sim.getInfo(false);
-            int day = sim.day;
+            int angry = simulation.getAmountEntities(true);
+            int peaceful = simulation.getAmountEntities(false);
+            int day = simulation.getDay();
 
             label_Angry.Content = angry.ToString();
             label_Peaceful.Content = peaceful.ToString();
             label_Day.Content = day.ToString();
         }
 
-        public void simData_setNewFromInput()
+        private void simData_setNewFromInput()
         {
             int ang, pea, fam;
             ang = Convert.ToInt32(input_Angry.Text);
             pea = Convert.ToInt32(input_Peaceful.Text);
             fam = Convert.ToInt32(input_Food.Text);
-            sim = new Simulation(ang, pea, fam);
-        }
-
-        public void sim_PlayDay()
-        {
-            sim.playDay();
-            simData_displayToOutput();
+            simulation.setNewSim(ang, pea, fam);
         }
 
         public void sim_New()
         {
-            timer.Stop();
+            simulation.Pause();
             simData_setNewFromInput();
             simData_displayToOutput();
         }
 
         public void sim_Start()
         {
-            if (sim == null)
+            if (simulation.getDay() == 0)
             {
-                timer.Stop();
-                simData_setNewFromInput();
-                simData_displayToOutput();
+                sim_New();
             }
-            timer.Start();
+
+            simulation.Start();
         }
 
         public void sim_Pause()
         {
-            timer.Stop();
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            sim_PlayDay();
+            simulation.Pause();
         }
 
         private void btn_NewSim_Click(object sender, RoutedEventArgs e)
@@ -101,15 +88,4 @@ namespace evolution
         }
 
     }
-
-    public class Timer : DispatcherTimer
-    {
-        public Timer(EventHandler handler)
-        {
-            Tick += new EventHandler(handler);
-            Interval = new TimeSpan(0, 0, 1);
-            Stop();
-        }
-    }
-
 }

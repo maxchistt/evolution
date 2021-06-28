@@ -1,31 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Threading;
 
 namespace evolution
 {
     public class Simulation
     {
-        Random rnd;
-        Match[] matchArr;
-        List<Animal> animalArr;
+        private Timer timer;
+        private Random rnd;
+        private Match[] matchArr;
+        private List<Animal> animalArr;
+        private int day;
 
-        public int day = 0;
-
-        public Simulation(int angry_amount, int peaceful_amount, int food_amount)
+        public Simulation()
         {
+            day = 0;
+            timer = new Timer();
             rnd = new Random();
-            matchArr = new Match[food_amount];
-            animalArr = new List<Animal>();
-
-            //first fill of animal arr
-            for (int i = 0; i < peaceful_amount + angry_amount; i++)
-            {
-                animalArr.Add(new Animal(i < angry_amount ? true : false));
-            }
+            addTimerHandler(playDay);
         }
 
-        public void playDay()
+        private void playDay()
         {
             List<Animal> newDayAnimalArr = new List<Animal>();
 
@@ -62,14 +58,46 @@ namespace evolution
             day++;
         }
 
-        public int getInfo(bool angry)
+        public void setNewSim(int angry_amount, int peaceful_amount, int food_amount)
+        {
+            day = 0;
+            matchArr = new Match[food_amount];
+            animalArr = new List<Animal>();
+            //first fill of animal arr
+            for (int i = 0; i < peaceful_amount + angry_amount; i++)
+            {
+                animalArr.Add(new Animal(i < angry_amount ? true : false));
+            }
+        }
+
+        public void addTimerHandler(Action onNewDay)
+        {
+            timer.addHandler(onNewDay);
+        }
+
+        public void Start()
+        {
+            timer.Start();
+        }
+
+        public void Pause()
+        {
+            timer.Stop();
+        }
+
+        public int getAmountEntities(bool angryType)
         {
             int amount = 0;
             foreach (var item in animalArr)
             {
-                if (item.angryMod == angry) amount++;
+                if (item.angryMod == angryType) amount++;
             }
             return amount;
+        }
+
+        public int getDay()
+        {
+            return day;
         }
     }
 
@@ -86,10 +114,8 @@ namespace evolution
     {
         List<Animal> matchAnimals = new List<Animal>();
         Random rnd = new Random();
-        public Match()
-        {
 
-        }
+        public Match() { }
 
         public void add(Animal animal)
         {
@@ -134,6 +160,23 @@ namespace evolution
                 }
             };
             return res;
+        }
+    }
+
+    public class Timer : DispatcherTimer
+    {
+        public Timer()
+        {
+            Interval = new TimeSpan(0, 0, 1);
+            Stop();
+        }
+
+        public void addHandler(Action handler)
+        {
+            Tick += new EventHandler((object sender, EventArgs e) =>
+            {
+                handler();
+            });
         }
     }
 }
