@@ -23,31 +23,36 @@ namespace evolution
 
         private void playDay()
         {
-            List<Animal> newDayAnimalArr = new List<Animal>();
-
             //refresh match arr
             for (int i = 0; i < matchArr.Length; i++)
             {
                 matchArr[i] = new Match();
             }
 
-            //shuffle animal arr
-            List<Animal> data = new List<Animal>();
+            //shuffle animals
+            List<Animal> shuffled = new List<Animal>();
             foreach (Animal s in animalArr)
             {
-                int j = rnd.Next(data.Count + 1);
-                if (j == data.Count)
+                int j = rnd.Next(shuffled.Count + 1);
+                if (j == shuffled.Count)
                 {
-                    data.Add(s);
+                    shuffled.Add(s);
                 }
                 else
                 {
-                    data.Add(data[j]);
-                    data[j] = s;
+                    shuffled.Add(shuffled[j]);
+                    shuffled[j] = s;
                 }
             }
+            animalArr = shuffled;
 
-            //fill matches
+            //set animals list ref to refreshed matches
+            for (int i = 0; i < matchArr.Length; i++)
+            {
+                matchArr[i].setAnimalsRef(ref animalArr);
+            }
+
+            //fill animals to match arr
             for (int i = 0; i < animalArr.Count; i++)
             {
                 List<int> numArr = new List<int>();
@@ -58,18 +63,25 @@ namespace evolution
                         numArr.Add(ind);
                     }
                 }
-                if (numArr.Count>0)
+                if (numArr.Count > 0)
                 {
                     int mNum = numArr[rnd.Next(numArr.Count)];
-                    matchArr[mNum].add(animalArr[i]);
+                    matchArr[mNum].add(i);
+                    
                 }
             }
 
-            //get results
+            //fight matches
             for (int i = 0; i < matchArr.Length; i++)
             {
-                List<Animal> addList = matchArr[i].fightAndGetResult();
-                newDayAnimalArr.AddRange(addList);
+                matchArr[i].fight();
+            }
+
+            //fill new day aninal list
+            List<Animal> newDayAnimalArr = new List<Animal>();
+            for (int i = 0; i < animalArr.Count; i++)
+            {
+                newDayAnimalArr.AddRange(animalArr[i].returnAfterDay());
             }
 
             //apply results
@@ -122,72 +134,105 @@ namespace evolution
 
     public class Animal
     {
+        private Random rnd;
         public bool angryMod;
+        public int food;
+
         public Animal(bool Angry)
         {
+            rnd = new Random();
             angryMod = Angry;
+            food = 0;
         }
+
+        public List<Animal> returnAfterDay()
+        {
+            List<Animal> res = new List<Animal>();
+            switch (food)
+            {
+                case 0:
+                    break;
+                case 1:
+                    if (rnd.Next(2) > 0) res.Add(this);
+                    break;
+                case 2:
+                    res.Add(this);
+                    break;
+                case 3:
+                    res.Add(this);
+                    if (rnd.Next(2) > 0) res.Add(new Animal(angryMod));
+                    break;
+                case 4:
+                    res.Add(this);
+                    res.Add(new Animal(angryMod));
+                    break;
+                default:
+                    Console.WriteLine("Default case");
+                    break;
+            }
+            food = 0;
+            return res;
+        }
+
     }
 
     public class Match
     {
-        private List<Animal> matchAnimals;
-        private Random rnd;
+        private List<int> matchAnimalIndexes;
+        private List<Animal> animalArrRef;
+        public int food;
 
         public Match()
         {
-            matchAnimals = new List<Animal>();
-            rnd = new Random();
+            food = 4;
+            matchAnimalIndexes = new List<int>();
+            animalArrRef = new List<Animal>();
         }
 
-        public void add(Animal animal)
+        public void setAnimalsRef(ref List<Animal> arrRef)
         {
-            matchAnimals.Add(animal);
+            animalArrRef = arrRef;
+        }
+
+        public void add(int animalIndex)
+        {
+            if (getCount() < 2) { matchAnimalIndexes.Add(animalIndex); }
         }
 
         public int getCount()
         {
-            return matchAnimals.Count;
+            return matchAnimalIndexes.Count;
         }
 
-        public List<Animal> fightAndGetResult()
+        public void fight()
         {
-            List<Animal> res = new List<Animal>();
-
-            if (matchAnimals.Count == 1)
+            if (getCount() == 1)
             {
-                res.Add(matchAnimals[0]);
-                res.Add(matchAnimals[0]);//children
+                animalArrRef[matchAnimalIndexes[0]].food += food;
             }
-            else if (matchAnimals.Count > 1)
+            else if (getCount() > 1)
             {
-                bool aMod0 = matchAnimals[0].angryMod;
-                bool aMod1 = matchAnimals[1].angryMod;
+                bool aMod0 = animalArrRef[matchAnimalIndexes[0]].angryMod;
+                bool aMod1 = animalArrRef[matchAnimalIndexes[1]].angryMod;
 
                 if (aMod0 != aMod1)
                 {
                     int winnerNum = (aMod0) ? 0 : 1;
-                    int loserNum = (aMod0) ? 1 : 0;
-
-                    if (rnd.Next(2) > 0) res.Add(matchAnimals[loserNum]);//loser
-                    res.Add(matchAnimals[winnerNum]);//winner 
-                    if (rnd.Next(2) > 0) res.Add(new Animal(matchAnimals[winnerNum].angryMod));//winner children
-
+                    int looserNum = (winnerNum == 1) ? 0 : 1;
+                    animalArrRef[matchAnimalIndexes[winnerNum]].food += (food * 3) / 4;
+                    animalArrRef[matchAnimalIndexes[looserNum]].food += food / 4;
                 }
                 else if (aMod0 == true)
                 {
-                    res.Add(matchAnimals[rnd.Next(2)]);//fight winner
-
+                    //animalArrRef[matchAnimalIndexes[0]].food += food / 4;
+                    //animalArrRef[matchAnimalIndexes[1]].food += food / 4;
                 }
                 else if (aMod0 == false)
                 {
-                    res.Add(matchAnimals[0]);//animal1
-                    if (rnd.Next(2) > 0) res.Add(new Animal(matchAnimals[0].angryMod));//children1
-                    res.Add(matchAnimals[1]);//animal2
-                    if (rnd.Next(2) > 0) res.Add(new Animal(matchAnimals[1].angryMod));//children2
+                    animalArrRef[matchAnimalIndexes[0]].food += food / 2;
+                    animalArrRef[matchAnimalIndexes[1]].food += food / 2;
                 }
             };
-            return res;
         }
     }
 
