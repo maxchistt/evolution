@@ -80,6 +80,7 @@
                 <Label Grid.Column="2" Content="Harm in fight %" HorizontalAlignment="Right" Margin="0,0,75,22" VerticalAlignment="Bottom" Width="87" Height="26" Grid.Row="2"/>
                 <TextBox Grid.Column="2" x:Name="input_Harm" Text="90" Padding="3" VerticalContentAlignment="Center" HorizontalAlignment="Right" Margin="0,10,10,2" TextWrapping="NoWrap" Width="152" Grid.Row="2" />
                 <Button Grid.Column="1" x:Name="btn_Update" Click="btn_Update_Click"  Grid.Row="3" materialDesign:ButtonAssist.CornerRadius="3" FontFamily="LCD" Content="Update simulation data" VerticalAlignment="Center" Height="35" Cursor="Hand" Grid.ColumnSpan="2" Margin="22,0,10,0"/>
+                <Label HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" Content="Every animal need to eat every day. He need &#xD;&#xA;two feeds to 100% duplicate, one to 100% &#xD;&#xA;survive. By default thats 50 foods with 2 feed &#xD;&#xA;cost. Thats not enough food for all. Two entities &#xD;&#xA;can have a match for one food. If its two peace-&#xD;&#xA;ful, they take equal halfs. If its peaceful and &#xD;&#xA;angry, angry takes 75% of food. If its two angry &#xD;&#xA;animals, one die, one take all food, but have 90% &#xD;&#xA;harm. You can play with numeric parameters" Margin="177,2,0,0" VerticalAlignment="Top" Grid.Row="1" Height="141" Width="268" Grid.RowSpan="3" FontFamily="Bahnschrift Light" FontSize="11"/>
 
             </Grid>
         </GroupBox>
