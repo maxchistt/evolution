@@ -294,7 +294,7 @@ namespace evolution
 
     public class Match
     {
-        private List<int> matchAnimalIndexes; /// поменять
+        private int[] matchAnimalIndexes;
         private List<Animal> animalArrRef;
 
         public double food_in_match = 2;
@@ -303,7 +303,7 @@ namespace evolution
 
         public Match()
         {
-            matchAnimalIndexes = new List<int>();
+            matchAnimalIndexes = new int[2] { -1, -1 };
         }
 
         public void updateDinamicData(double foodInMatch, double angryAngryFightHarmPercent, double angryPecefulAngrysPartPercent)
@@ -320,12 +320,27 @@ namespace evolution
 
         public void addAnimalIndex(int animalIndex)
         {
-            if (getCount() < 2) { matchAnimalIndexes.Add(animalIndex); }
+            for (int i = 0; i < matchAnimalIndexes.Length; i++)
+            {
+                if (matchAnimalIndexes[i] < 0)
+                {
+                    matchAnimalIndexes[i] = animalIndex;
+                    break;
+                }
+            }
         }
 
         public int getCount()
         {
-            return matchAnimalIndexes.Count;
+            int count = 0;
+            foreach (int ind in matchAnimalIndexes)
+            {
+                if (ind >= 0)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
 
         public void fight()
@@ -341,7 +356,7 @@ namespace evolution
 
                 if (aMod0 != aMod1)
                 {
-                    int winnerNum = (aMod0) ? 0 : 1;
+                    int winnerNum = aMod0 ? 0 : 1;
                     int looserNum = (winnerNum == 1) ? 0 : 1;
                     animalArrRef[matchAnimalIndexes[winnerNum]].food += food_in_match * angry_peceful_AngrysPartPercent / 100;
                     animalArrRef[matchAnimalIndexes[looserNum]].food += food_in_match * (100 - angry_peceful_AngrysPartPercent) / 100;
