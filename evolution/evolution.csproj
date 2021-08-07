@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="background.jpg" />
-    <Resource Include="icon.ico" />
+    <Resource Include="Resources\background.jpg" />
+    <Resource Include="Resources\icon.ico" />
   </ItemGroup>
 
 </Project>

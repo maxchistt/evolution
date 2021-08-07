@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:evolution"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Icon="icon.ico"
+        Icon="Resources/icon.ico"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -32,7 +32,7 @@
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
         <Grid.Background>
-            <ImageBrush ImageSource="/background.jpg" Stretch="UniformToFill"></ImageBrush>
+            <ImageBrush ImageSource="Resources/background.jpg" Stretch="UniformToFill"></ImageBrush>
         </Grid.Background>
 
         <Border Opacity="0.9" CornerRadius="3" Background="White" Grid.Column="1" Grid.Row="1" Margin="10,10,10,10"/>
