@@ -50,7 +50,7 @@
         </Grid>
 
         <Border Opacity="0.9" CornerRadius="3" Background="White" Grid.Column="1" Grid.Row="3" Margin="10,10,10,10"/>
-        <GroupBox Header="INPUT data" Margin="10,10,10,10" Grid.Column="1" Grid.Row="3" FontFamily="LCD">
+        <GroupBox Header="INPUT data" x:Name="INPUTdata" Margin="10,10,10,10" Grid.Column="1" Grid.Row="3" FontFamily="LCD">
             <Grid Height="168" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="11*"/>

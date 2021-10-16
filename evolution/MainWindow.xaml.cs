@@ -49,32 +49,58 @@ namespace evolution
             label_Day.Content = day.ToString();
         }
 
+        private void catchInputDataErr(Exception e)
+        {
+            INPUTdata.Header = "INPUT data" + "     Error: " + e.Message;
+        }
+
         private void simData_setNewFromInput()
         {
-            int ang, pea, foodAmount;
-            ang = Convert.ToInt32(input_Angry.Text);
-            pea = Convert.ToInt32(input_Peaceful.Text);
-            foodAmount = Convert.ToInt32(input_Food.Text);
-            simulation.setNewSim(ang, pea, foodAmount);
+            try
+            {
+                int ang, pea, foodAmount;
+                ang = Convert.ToInt32(input_Angry.Text);
+                pea = Convert.ToInt32(input_Peaceful.Text);
+                foodAmount = Convert.ToInt32(input_Food.Text);
+                simulation.setNewSim(ang, pea, foodAmount);
+            }
+            catch (Exception e)
+            {
+                catchInputDataErr(e);
+            }
         }
 
         public void simData_PushAnimals()
         {
-            int ang, pea;
-            ang = Convert.ToInt32(input_Angry.Text);
-            pea = Convert.ToInt32(input_Peaceful.Text);
-            simulation.pushAnimals(ang, pea);
+            try
+            {
+                int ang, pea;
+                ang = Convert.ToInt32(input_Angry.Text);
+                pea = Convert.ToInt32(input_Peaceful.Text);
+                simulation.pushAnimals(ang, pea);
+            }
+            catch (Exception e)
+            {
+                catchInputDataErr(e);
+            }
         }
 
         public void simData_updateDynamic()
         {
-            int foodAmount = Convert.ToInt32(input_Food.Text);
-            double feedInMatchFood, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent;
-            feedInMatchFood = Convert.ToDouble(input_Feed.Text);
-            angryAngryFightHarmPercent = Convert.ToDouble(input_Harm.Text);
-            angryPecefulAngrysPartPercent = Convert.ToDouble(input_Part.Text);
+            try
+            {
+                int foodAmount = Convert.ToInt32(input_Food.Text);
+                double feedInMatchFood, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent;
+                feedInMatchFood = Convert.ToDouble(input_Feed.Text);
+                angryAngryFightHarmPercent = Convert.ToDouble(input_Harm.Text);
+                angryPecefulAngrysPartPercent = Convert.ToDouble(input_Part.Text);
 
-            simulation.updateDinamicData(foodAmount, feedInMatchFood, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent);
+                simulation.updateDinamicData(foodAmount, feedInMatchFood, angryAngryFightHarmPercent, angryPecefulAngrysPartPercent);
+            }
+            catch (Exception e)
+            {
+                catchInputDataErr(e);
+            }
         }
 
         public void sim_New()
